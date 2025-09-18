@@ -1,0 +1,30 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+          
+      - run: dart pub get
+      - run: dart compile exe bin/main.dart -o cbn_mcp
+      
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: cbn_mcp
+          body: |
+            Download `cbn_mcp` and run it on Mac, Linux, or Windows.
+            
+            Make it executable: `chmod +x cbn_mcp`
+            Run it: `./cbn_mcp`
