@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "cbn-mcp": {
-      "command": "dart run /Users/chiziaruhoma/projects/work-projects/mcp/cbn_mcp/bin/main.dart",
+      "command": "dart run ../bin/main.dart",
       "args": [],
       "description": "Central Bank of Nigeria MCP Server - Access CBN circulars, regulations, and financial data"
     }
