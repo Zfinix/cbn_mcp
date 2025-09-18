@@ -4,6 +4,8 @@
 
 A Model Context Protocol (MCP) server for accessing Central Bank of Nigeria (CBN) data and circulars. Connect this server to Cursor, Claude Desktop, or any MCP-compatible application to access CBN regulatory information directly in your AI conversations.
 
+**Built with [mcp_server_dart](https://pub.dev/packages/mcp_server_dart)** - A developer-friendly MCP framework for Dart with annotations and code generation that I created.
+
 ## Features
 
 ### MCP Tools
