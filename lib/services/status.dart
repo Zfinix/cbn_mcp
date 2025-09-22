@@ -1,10 +1,11 @@
 import 'package:cbn_mcp/core/api/api_client.dart';
+import 'package:cbn_mcp/models/models.dart';
 
 /// Service for checking CBN API status
-class CBNApiStatusService {
+class StatusService {
   final ApiClient _apiClient;
 
-  CBNApiStatusService(this._apiClient);
+  StatusService(this._apiClient);
 
   /// Get the current status and health of the CBN API connection
   Future<Map<String, dynamic>> getApiStatus() async {
@@ -19,14 +20,12 @@ class CBNApiStatusService {
         'status': 'unhealthy',
         'error': e.message,
         'last_checked': DateTime.now().toIso8601String(),
-        'api_endpoint': _apiClient.dio.options.baseUrl,
       },
       (res) => {
         'status': res.statusCode == 200 ? 'healthy' : 'unhealthy',
         'response_code': res.statusCode,
         'response_time_ms': DateTime.now().difference(startTime).inMilliseconds,
         'last_checked': DateTime.now().toIso8601String(),
-        'api_endpoint': _apiClient.dio.options.baseUrl,
       },
     );
   }
@@ -47,5 +46,18 @@ class CBNApiStatusService {
       ],
       'uptime': DateTime.now().toIso8601String(),
     };
+  }
+
+  /// Get a random fact from the CBN API
+  Future<Map<String, dynamic>> getRandomFact() async {
+    final response = await _apiClient.get('/facts/random');
+
+    return response.fold(
+      (e) => {'status': 'unhealthy', 'error': e.message},
+      (res) => {
+        'status': 'healthy',
+        ...RandomFact.fromResponse(res.data).toMap(),
+      },
+    );
   }
 }

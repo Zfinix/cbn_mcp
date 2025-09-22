@@ -10,13 +10,13 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 /// Service for handling CBN circulars
-class CBNCircularsService {
+class CircularsService {
   final ApiClient _apiClient;
 
-  CBNCircularsService(this._apiClient);
+  CircularsService(this._apiClient);
 
   /// Fetch all CBN circulars with optional filtering
-  Future<Either<ServerError, CircularsFilterResult>> getAllCirculars({
+  Future<Either<ServerError, CircularsResponse>> getAllCirculars({
     String? startDate,
     String? endDate,
     String? category,
@@ -31,29 +31,16 @@ class CBNCircularsService {
         ServerError(error: e.message, message: 'Failed to fetch circulars'),
       ),
       (res) {
-        final circulars = CircularsResponse.fromResponse(res.data)
-            .filterByDateRange(
-              startDate: startDate,
-              endDate: endDate,
-              category: category,
-              limit: limit,
-            );
+        final circulars = CircularsResponse.fromResponse(res.data).filterBy(
+          startDate: startDate,
+          endDate: endDate,
+          category: category,
+          limit: limit,
+        );
         logger.i('Successfully fetched ${circulars.data.length} circulars');
 
         return Right(
-          CircularsFilterResult(
-            success: true,
-            circulars: circulars.data,
-            count: circulars.data.length,
-            filtersApplied:
-                (startDate != null || endDate != null || category != null)
-                ? {
-                    'startDate': startDate,
-                    'endDate': endDate,
-                    'category': category,
-                    'limit': limit,
-                  }
-                : null,
+          circulars.copyWith(
             message: 'Successfully fetched ${circulars.data.length} circulars',
           ),
         );
@@ -72,7 +59,7 @@ class CBNCircularsService {
     final response = await getAllCirculars(limit: limit);
 
     return response.fold((e) => null, (res) {
-      return res.circulars.firstOrNullWhere((c) => c.id == circularId);
+      return res.data.firstOrNullWhere((c) => c.id == circularId);
     });
   }
 
@@ -92,7 +79,7 @@ class CBNCircularsService {
         'message': 'Failed to search circulars',
       },
       (res) {
-        final searchResults = res.circulars
+        final searchResults = res.data
             .where((circular) {
               final title = circular.title.toLowerCase();
               final description = circular.description?.toLowerCase() ?? '';

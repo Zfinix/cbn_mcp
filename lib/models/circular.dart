@@ -96,31 +96,8 @@ class CircularsResponse with CircularsResponseMappable {
       CircularsResponseMapper.fromMap(map);
 }
 
-@MappableClass()
-class CircularsFilterResult with CircularsFilterResultMappable {
-  final bool success;
-  final List<Circular> circulars;
-  final int count;
-  final Map<String, dynamic>? filtersApplied;
-  final String message;
-
-  const CircularsFilterResult({
-    required this.success,
-    required this.circulars,
-    required this.count,
-    this.filtersApplied,
-    required this.message,
-  });
-
-  factory CircularsFilterResult.fromJson(String json) =>
-      CircularsFilterResultMapper.fromJson(json);
-
-  factory CircularsFilterResult.fromMap(Map<String, dynamic> map) =>
-      CircularsFilterResultMapper.fromMap(map);
-}
-
 extension CircularsResponseExtension on CircularsResponse {
-  CircularsResponse filterByDateRange({
+  CircularsResponse filterBy({
     String? startDate,
     String? endDate,
     String? category,
@@ -166,3 +143,4 @@ extension CircularsResponseExtension on CircularsResponse {
     );
   }
 }
+

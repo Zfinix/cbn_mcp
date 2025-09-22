@@ -1,5 +1,5 @@
 /// Service for generating CBN-related prompts
-class CBNPromptService {
+class PromptService {
   /// Generate a summary prompt for CBN circulars analysis
   String circularSummaryPrompt({
     required String circularData,
