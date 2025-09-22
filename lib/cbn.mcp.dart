@@ -284,6 +284,172 @@ extension NGCentralBankMCPServerRegistration on NGCentralBankMCPServer {
         institutionType: institutionType,
       );
     });
+
+    // Register handler for @MCPTool('getAllExchangeRates')
+
+    registerTool(
+      'getAllExchangeRates',
+      (context) async {
+        final startDate = context.optionalParam<String?>('startDate');
+        final endDate = context.optionalParam<String?>('endDate');
+        final currency = context.optionalParam<String?>('currency');
+        final limit = context.optionalParam<int>('limit') ?? 50;
+        return await getAllExchangeRates(
+          startDate: startDate,
+          endDate: endDate,
+          currency: currency,
+          limit: limit,
+        );
+      },
+      description: 'Fetch all CBN exchange rates with optional filtering',
+      inputSchema: {
+        'type': 'object',
+        'properties': {
+          'startDate': {
+            'type': 'string',
+            'description': 'Start date for filtering (YYYY-MM-DD format)',
+          },
+          'endDate': {
+            'type': 'string',
+            'description': 'End date for filtering (YYYY-MM-DD format)',
+          },
+          'currency': {
+            'type': 'string',
+            'description': 'Currency for filtering',
+          },
+          'limit': {'type': 'integer', 'description': 'Limit for filtering'},
+        },
+      },
+    );
+
+    // Register handler for @MCPTool('getExchangeRateById')
+
+    registerTool(
+      'getExchangeRateById',
+      (context) async {
+        final exchangeRateId = context.param<int>('exchangeRateId');
+        return await getExchangeRateById(exchangeRateId);
+      },
+      description: 'Get a specific CBN exchange rate by its ID',
+      inputSchema: {
+        'type': 'object',
+        'properties': {
+          'exchangeRateId': {
+            'type': 'integer',
+            'description': 'The ID of the exchange rate to retrieve',
+          },
+        },
+        'required': ['exchangeRateId'],
+      },
+    );
+
+    // Register handler for @MCPTool('getAllFinancialData')
+
+    registerTool(
+      'getAllFinancialData',
+      (context) async {
+        final startDate = context.optionalParam<String?>('startDate');
+        final endDate = context.optionalParam<String?>('endDate');
+        final limit = context.optionalParam<int>('limit') ?? 50;
+        final minOpeningBalance = context.optionalParam<double?>(
+          'minOpeningBalance',
+        );
+        final maxOpeningBalance = context.optionalParam<double?>(
+          'maxOpeningBalance',
+        );
+        final minRepo = context.optionalParam<double?>('minRepo');
+        final maxRepo = context.optionalParam<double?>('maxRepo');
+        final minCashReserveRatio = context.optionalParam<double?>(
+          'minCashReserveRatio',
+        );
+        final maxCashReserveRatio = context.optionalParam<double?>(
+          'maxCashReserveRatio',
+        );
+        return await getAllFinancialData(
+          startDate: startDate,
+          endDate: endDate,
+          limit: limit,
+          minOpeningBalance: minOpeningBalance,
+          maxOpeningBalance: maxOpeningBalance,
+          minRepo: minRepo,
+          maxRepo: maxRepo,
+          minCashReserveRatio: minCashReserveRatio,
+          maxCashReserveRatio: maxCashReserveRatio,
+        );
+      },
+      description: 'Fetch all CBN financial data with optional filtering',
+      inputSchema: {
+        'type': 'object',
+        'properties': {
+          'startDate': {
+            'type': 'string',
+            'description': 'Start date for filtering (YYYY-MM-DD format)',
+          },
+          'endDate': {
+            'type': 'string',
+            'description': 'End date for filtering (YYYY-MM-DD format)',
+          },
+          'limit': {'type': 'integer', 'description': 'Limit for filtering'},
+          'minOpeningBalance': {
+            'type': 'string',
+            'description': 'Min opening balance for filtering',
+          },
+          'maxOpeningBalance': {
+            'type': 'string',
+            'description': 'Max opening balance for filtering',
+          },
+          'minRepo': {
+            'type': 'string',
+            'description': 'Min repo for filtering',
+          },
+          'maxRepo': {
+            'type': 'string',
+            'description': 'Max repo for filtering',
+          },
+          'minCashReserveRatio': {
+            'type': 'string',
+            'description': 'Min cash reserve ratio for filtering',
+          },
+          'maxCashReserveRatio': {
+            'type': 'string',
+            'description': 'Max cash reserve ratio for filtering',
+          },
+        },
+      },
+    );
+
+    // Register handler for @MCPTool('getFinancialDataById')
+
+    registerTool(
+      'getFinancialDataById',
+      (context) async {
+        final financialDataId = context.param<int>('financialDataId');
+        return await getFinancialDataById(financialDataId);
+      },
+      description: 'Get a specific CBN financial data by its ID',
+      inputSchema: {
+        'type': 'object',
+        'properties': {
+          'financialDataId': {
+            'type': 'integer',
+            'description': 'The ID of the financial data to retrieve',
+          },
+        },
+        'required': ['financialDataId'],
+      },
+    );
+
+    // Register handler for @MCPResource('randomFact')
+
+    registerResource('randomFact', (uri) async {
+      final result = await getRandomFact();
+      return MCPResourceContent(
+        uri: uri,
+        name: 'randomFact',
+        mimeType: 'application/json',
+        text: jsonEncode(result),
+      );
+    });
   }
 
   /// Generates standardized usage documentation for MCP servers.
@@ -300,10 +466,10 @@ extension NGCentralBankMCPServerRegistration on NGCentralBankMCPServer {
     print('  --help, -h     Show this help message');
     print('');
     print(
-      'Available tools: getAllCirculars, getCircularById, searchCirculars, fetchCircularPdf, downloadCircularPdfBinary, fetchCircularPdfById, getCircularPdfUrl, getCircularsForLLMAnalysis',
+      'Available tools: getAllCirculars, getCircularById, searchCirculars, fetchCircularPdf, downloadCircularPdfBinary, fetchCircularPdfById, getCircularPdfUrl, getCircularsForLLMAnalysis, getAllExchangeRates, getExchangeRateById, getAllFinancialData, getFinancialDataById',
     );
     print(
-      'Available resources: cbnApiStatus, serverInfo, availableCircularPdfs',
+      'Available resources: cbnApiStatus, serverInfo, availableCircularPdfs, randomFact',
     );
     print('Available prompts: circularSummary, regulatoryAnalysis');
     print('');

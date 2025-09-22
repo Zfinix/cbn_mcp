@@ -364,10 +364,9 @@ packages:
   mcp_server_dart:
     dependency: "direct main"
     description:
-      name: mcp_server_dart
-      sha256: e8780d7e1bf41a37fe4fe525d3d0a42cd8ddcee325b659cc53594708dad7cb84
-      url: "https://pub.dev"
-    source: hosted
+      path: "../mcp_server_dart"
+      relative: true
+    source: path
     version: "1.2.0"
   meta:
     dependency: transitive

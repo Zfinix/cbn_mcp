@@ -14,8 +14,12 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  mcp_server_dart: ^1.2.0
-  # path: ../mcp_server_dart
+  mcp_server_dart:
+    # git: 
+    #   url: https://github.com/zfinix/mcp_server_dart.git
+    #   ref: bd4e14626da34a63382eb735157a485af441b3ec
+  
+    path: ../mcp_server_dart
 
   http: ^1.2.0
   dio: ^5.4.0
